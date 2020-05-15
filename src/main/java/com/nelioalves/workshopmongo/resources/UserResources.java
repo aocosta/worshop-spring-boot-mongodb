@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +15,7 @@ import com.nelioalves.workshopmongo.dto.UserDTO;
 import com.nelioalves.workshopmongo.services.UserService;
 
 @RestController
-@RequestMapping(value = "/users")
+@RequestMapping(value = "/users")	// forma como os métodos serão chamados no browser: url/users...
 public class UserResources {
 
 	@Autowired	// o spring já faz a instanciação do objeto
@@ -23,7 +24,7 @@ public class UserResources {
 	/*
 	// @GetMapping  // forma mais simples
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<User>> findAll(){
+	public ResponseEntity<List<User>> findAll() {
 		User maria = new User("1", "Maria Brown", "maria@gmail.com");
 		User alex = new User("2", "Alex Silva", "alex@gmail.com");
 
@@ -33,16 +34,21 @@ public class UserResources {
 
 	/*
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<User>> findAll(){
+	public ResponseEntity<List<User>> findAll() {
 		return ResponseEntity.ok().body(service.findAll());
 	}
 	*/
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<List<UserDTO>> findAll(){
+	public ResponseEntity<List<UserDTO>> findAll() {
 		List<User> users = service.findAll();
 		List<UserDTO> usersDto = users.stream().map(x -> new UserDTO(x)).collect(Collectors.toList());
 		return ResponseEntity.ok().body(usersDto);
+	}
+
+	@RequestMapping(value = "{id}", method = RequestMethod.GET)
+	public ResponseEntity<UserDTO> findById(@PathVariable String id) {
+		return ResponseEntity.ok().body(new UserDTO(service.findById(id)));
 	}
 
 }
