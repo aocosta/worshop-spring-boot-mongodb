@@ -30,6 +30,11 @@ public class UserService {
 		return repository.insert(user);
 	}
 	
+	public void delete(String id) {
+		findById(id);	// procura primeiro e já lança exceção caso não encontre
+		repository.deleteById(id);
+	}
+	
 	public User fromDTO(UserDTO userDto) {
 		return new User(userDto.getId(), userDto.getName(), userDto.getEmail());
 	}
