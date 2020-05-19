@@ -1,8 +1,11 @@
 package com.nelioalves.workshopmongo.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 // @Document	// como a coleção no mongodb tem o mesmo nome, o spring consegue mapear sem informa-lo
@@ -15,6 +18,10 @@ public class User implements Serializable{
 	private String id;
 	private String name;
 	private String email;
+	
+	// avisa para o spring que é uma lista de referências (só o id), não do objeto inteiro
+	@DBRef(lazy = true)	// lazy = true -> não carrega a lista no carregamento do objeto
+	private List<Post> posts = new ArrayList<>();
 	
 	public User() {}
 
@@ -49,6 +56,14 @@ public class User implements Serializable{
 		this.email = email;
 	}
 
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
